@@ -1,5 +1,5 @@
-
-#include <stdio.h>
+#include<stdlib.h>
+#include<stdio.h>
 
 /* 1. Insert the required items in the other 2 enumerated types*/
 typedef enum { RED = 1, WHITE } Color;
@@ -9,7 +9,7 @@ typedef enum {} Arrangement;
 /*Function prototype */
 double getCost(Flower flower, Color  color, Arrangement arr);
 
-int main (void) {
+int main (int argc, char **argv) {
 
     //You can declare variables that hold your enums just like regular variables
 	Flower flower;
@@ -20,7 +20,7 @@ int main (void) {
 	printf("\nTypes of flowers\n");
 	printf("1. Roses\n");
 	printf("2. Lilies\n");
-	printf("3. Daises\n");
+	printf("3. Daisies\n");
 	printf("Please enter the item number for your choice: ");
 	scanf("%d", &flower);
 		
