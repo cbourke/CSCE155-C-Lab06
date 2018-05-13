@@ -1,0 +1,404 @@
+\documentclass[12pt]{scrartcl}
+
+
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{.25cm}
+
+\usepackage{graphicx}
+
+\usepackage{xcolor}
+
+\definecolor{darkred}{rgb}{0.5,0,0}
+\definecolor{darkgreen}{rgb}{0,0.5,0}
+\usepackage{hyperref}
+\hypersetup{
+  letterpaper,
+  colorlinks,
+  linkcolor=red,
+  citecolor=darkgreen,
+  menucolor=darkred,
+  urlcolor=blue,
+  pdfpagemode=none,
+  pdftitle={Introduction To Git},
+  pdfauthor={Christopher M. Bourke},
+  pdfcreator={$ $Id: cv-us.tex,v 1.28 2009/01/01 00:00:00 cbourke Exp $ $},
+  pdfsubject={PhD Thesis},
+  pdfkeywords={}
+}
+
+\definecolor{MyDarkBlue}{rgb}{0,0.08,0.45}
+\definecolor{MyDarkRed}{rgb}{0.45,0.08,0}
+\definecolor{MyDarkGreen}{rgb}{0.08,0.45,0.08}
+
+\definecolor{mintedBackground}{rgb}{0.95,0.95,0.95}
+\definecolor{mintedInlineBackground}{rgb}{.90,.90,1}
+
+%\usepackage{newfloat}
+\usepackage[newfloat=true]{minted}
+\setminted{mathescape,
+               linenos,
+               autogobble,
+               frame=none,
+               framesep=2mm,
+               framerule=0.4pt,
+               %label=foo,
+               xleftmargin=2em,
+               xrightmargin=0em,
+               startinline=true,  %PHP only, allow it to omit the PHP Tags *** with this option, variables using dollar sign in comments are treated as latex math
+               numbersep=10pt, %gap between line numbers and start of line
+               style=default, %syntax highlighting style, default is "default"
+               			    %gallery: http://help.farbox.com/pygments.html
+			    	    %list available: pygmentize -L styles
+               bgcolor=mintedBackground} %prevents breaking across pages
+               
+\setmintedinline{bgcolor={mintedBackground}}
+\setminted[text]{bgcolor={mintedBackground},linenos=false,autogobble,xleftmargin=1em}
+%\setminted[php]{bgcolor=mintedBackgroundPHP} %startinline=True}
+\SetupFloatingEnvironment{listing}{name=Code Sample}
+\SetupFloatingEnvironment{listing}{listname=List of Code Samples}
+
+\title{CSCE 155 - C}
+\subtitle{Lab 06 - Functions, Passing By Reference,\\ and Enumerated Types}
+\author{Dr.\ Chris Bourke}
+\date{~}
+
+\begin{document}
+
+\maketitle
+
+\section*{Prior to Lab}
+
+Before attending this lab:
+\begin{enumerate}
+  \item Read and familiarize yourself with this handout.
+  \item Review the lecture notes on conditionals, or the following free textbook resources:
+	\begin{itemize}
+  	  \item Functions: \url{http://www.cs.cf.ac.uk/Dave/C/node8.html}
+	  \item Enumerated Types: \url{http://www.cs.cf.ac.uk/Dave/C/node9.html}
+	  \item Pointers: \url{http://www.cs.cf.ac.uk/Dave/C/node10.html}
+	\end{itemize}
+\end{enumerate}
+
+\section*{Peer Programming Pair-Up}
+
+To encourage collaboration and a team environment, labs will be
+structured in a \emph{pair programming} setup.  At the start of
+each lab, you will be randomly paired up with another student 
+(conflicts such as absences will be dealt with by the lab instructor).
+One of you will be designated the \emph{driver} and the other
+the \emph{navigator}.  
+
+The navigator will be responsible for reading the instructions and
+telling the driver what to do next.  The driver will be in charge of the
+keyboard and workstation.  Both driver and navigator are responsible
+for suggesting fixes and solutions together.  Neither the navigator
+nor the driver is ``in charge.''  Beyond your immediate pairing, you
+are encouraged to help and interact and with other pairs in the lab.
+
+Each week you should alternate: if you were a driver last week, 
+be a navigator next, etc.  Resolve any issues (you were both drivers
+last week) within your pair.  Ask the lab instructor to resolve issues
+only when you cannot come to a consensus.  
+
+Because of the peer programming setup of labs, it is absolutely 
+essential that you complete any pre-lab activities and familiarize
+yourself with the handouts prior to coming to lab.  Failure to do
+so will negatively impact your ability to collaborate and work with 
+others which may mean that you will not be able to complete the
+lab.  
+
+\section{Lab Objectives \& Topics}
+At the end of this lab you should be familiar with the following
+\begin{itemize}
+  \item Basics of enumerated types
+  \item Functions with pass-by-value and pass-by-reference parameters
+  \item How to design and use functions with error handling
+  \item How to modularize code into separate header and source files
+  \item The proper use of enumerated types and functions in solving a 
+  given problem 
+\end{itemize}
+
+\section{Background}
+
+\subsection*{Enumerated Types}
+
+Enumerated types are data types that define a set of named values.  
+Enumerated types are often ordered and internally associated with 
+integers (starting with 0 by default and incremented by one in the 
+order of the list).  The purpose of enumerated types is to organize 
+certain types and enforce specific values.  Without enumerated types, 
+integer values must be used and the convention of assigning certain 
+integer values to certain types in a logical collection must be remembered 
+or documentation referred to as needed.  Enumerated types provide 
+a human-readable ``tag'' to these types of elements, relieving the 
+programmer of continually having to refer to the convention and avoiding 
+errors.
+
+\subsection*{Passing by Value versus Passing by Reference}
+
+In general there are two ways in which arguments can be passed to 
+a function: by value or by reference. When an argument (a variable) 
+is passed by value to a function, a copy of the value stored in the 
+variable is placed on the program stack and the function uses this 
+copy's value during its execution.  Any changes to the copy are not 
+realized in the calling function but are local to the function.
+
+In contrast, when an argument (variable) is passed by reference to a 
+function, the variable's memory address is used.  Locally, the variable 
+is treated as a pointer; to get or set its value, it must be dereferenced 
+using the \mintinline{c}{*} operator.  Any changes to the memory cell pointed to by 
+that pointer are reflected globally in the program and more specifically, 
+in the calling function.
+
+A full example:
+
+\begin{minted}{c}
+//a regular variable:
+int a = 10; 
+
+//a pointer to an integer, initially pointing to NULL
+int *ptr = NULL; 
+
+// & is the referencing operator, it gets the memory 
+// address of the variable a so that ptr can point to it
+ptr = &a; 
+
+// * is the dereferencing variable: it changes the pointer
+// back into a regular variable so a value can be assigned
+// or accessed:
+*ptr = 20; //a now holds the value 20
+\end{minted}
+
+One of the main uses of pointers is to enable pass-by-reference 
+for functions.  Consider the following function:
+
+\begin{minted}{c}
+int foo(int a, int b) {
+  a = 10;
+  return a + b;
+}
+\end{minted}
+
+When we call \mintinline{c}{foo}, the variable's we pass to it are passed
+\emph{by value} meaning that the value stored in the variables at the
+time that we call the function are copied and given to the function.  The
+change to the variable \mintinline{c}{a} in line 2 \emph{only affects
+the local variable}.  The original variable is unaltered.  That is, the following
+code:
+
+\begin{minted}{c}
+int x = 5;
+int y = 20;
+int z = foo(x, y);
+printf("x, y, z = %d, %d, %d\n" x, y, z);
+\end{minted}
+
+would print \mintinline{text}{5, 20, 30}: the variable \mintinline{c}{x} is not
+changed by the function \mintinline{c}{foo}.  Contrast this with the following:
+
+\begin{minted}{c}
+int bar(int *a, int b) {
+  *a = 10;
+  return (*a) + b;
+}
+\end{minted}
+
+In the function \mintinline{c}{bar}, the variable \mintinline{c}{a} is passed
+\emph{by reference} using a pointer.  Since the memory address is passed
+to \mintinline{c}{bar} instead of a copy of a value, we can alter the original
+value.  Now when line 2 changes the value of the pointer \mintinline{c}{a}, 
+the change affects the original variable.  That is, the code 
+
+\begin{minted}{c}
+int x = 5;
+int y = 20;
+int z = foo(&x, y);
+printf("x, y, z = %d, %d, %d\n" x, y, z);
+\end{minted}
+
+Will now print \mintinline{text}{10, 20, 30} since the variable \mintinline{c}{x}
+was passed by reference.
+
+Passing by reference means that we can ``return'' multiple values and/or use
+the return value to indicate an error code instead of a value now.
+
+\section{Activities}
+
+Clone the GitHub project for this lab using the following URL:
+\url{https://github.com/cbourke/CSCE155-C-Lab06}
+
+A flower shop sells various arrangements of a dozen flowers 
+(roses, lilies, daisies) in two colors each (red or white) with a 
+choice of bouquet or vase.  You are given an (incomplete) source 
+file, \mintinline{text}{florist.c}, of a program that takes the order 
+for a flower arrangement from the user and displays the cost. 
+The program uses three enumerated types to define the type 
+of flowers, color and flower arrangement.  Your task is to 
+complete the program and implement the getCost function to 
+compute the cost based on the following rules.
+\begin{enumerate}
+  \item The base price for each of the flowers is described in Table \ref{table:basePrice}
+  \begin{table}[h]
+  \centering
+  \begin{tabular}{l|l}
+  Flower & Price\\
+  \hline\hline
+  Roses & \$30 \\
+  Lilies	 & \$20 \\
+  Daisies & \$45 \\
+  \end{tabular}
+  \caption{Flower Prices}
+  \label{table:basePrice}
+  \end{table}
+  \item Red Lilies and Red Daisies have an added cost of \$5 and White 
+  	Roses have an added cost of \$10.  There is no additional cost for 
+	other flower/color combinations
+  \item Bouquets are free of charge while vases add an additional \$10 charge to the total
+\end{enumerate}
+	
+\subsection{Defining Enumerated Types}
+
+To complete the program, perform the following tasks.
+\begin{enumerate}
+  \item Insert the required items in the 3 enumerated types.  The \mintinline{c}{Color} 
+  	enumerated type has already been completed for you.  Note: the rest of the 
+	program assumes that all enumerated types begin with 1, you should keep 
+	this assumption so that you don?t need to change the block of \mintinline{c}{printf}
+	and \mintinline{c}{scanf} menu statements.
+  \item After taking input from the user, the program calls the function 
+	\mintinline{c}{getCost} to determine the cost. This function takes three 
+	input parameters, the flower type, the color and the arrangement and 
+	returns the cost (a \mintinline{c}{double}).
+	\begin{enumerate}
+	  \item The function prototype has been completed for you. Implement the 
+	  definition of this function to return the cost of a given arrangement using 
+	  the costs shown on the price list.
+	  \item In the main function, declare the other required variable(s), complete 
+	  the function call with appropriate arguments and print the cost. What's the 
+	  data type of the variable cost?
+	\end{enumerate}
+  \item Compile using  \mintinline{text}{gcc -o florist florist.c} and test your program.  
+	Answer the questions in your handout.
+\end{enumerate}
+
+\subsection{Passing By Reference}
+
+Due to a harsh winter, Red Daisies are no longer available.  We will make the 
+appropriate changes to the \mintinline{c}{getCost} function to accommodate this 
+change and to communicate errors through the function's return type.  The cost 
+will be communicated to the calling function by reference rather than as its return 
+value.
+\begin{enumerate}
+  \item Change the signature of the getCost function to: \\
+	\mintinline{c}{int getCost(double *cost, Flower flower, Color  color, Arrangement arr)}
+  \item Change the definition of the function to do the following:
+  	\begin{enumerate}
+	  \item If given invalid arguments, it returns a value of 1 (indicating an error)
+	  \item If given valid arguments, it returns a value of 0 (indicating no error) and 
+		places the cost in the cost variable (which is passed by reference)
+	\end{enumerate}
+  \item In the \mintinline{c}{main} function, make other necessary changes to 
+	accommodate the above.  In addition, you should check the return value 
+	of the \mintinline{c}{getCost} function and print an error message in the case 
+	that it results in an error. 
+  \item Test your changes and demonstrate them to a lab instructor.
+\end{enumerate}
+
+\subsection{Using Error Codes}
+
+Enumerated types are useful, but safety is not always guaranteed.  To illustrate, 
+the following code would compile: \mintinline{c}{Color c = 10;} even though there is no color 
+corresponding to the integer 10.  What happens if you call your \mintinline{c}{getCost} 
+function using such a color?  To prevent this, we will add additional code to detect 
+and handle this type of error situation.
+
+\begin{enumerate}
+  \item Add another enumerated type called \mintinline{c}{Error} that will 
+	recognize the following error types: No Error, Unavailable Selection Error, 
+	Invalid Argument Error, and Null Pointer Error (note: a good convention 
+	is to use all-caps with words separated by an underscore).
+  \item Add additional code and checks to your \mintinline{c}{getCost} function 
+	to check for valid input (on all the arguments).
+  \item Modify the \mintinline{c}{getCost} method to return one of your enumerated types 
+	based on the type of error encountered.
+  \item Modify your \mintinline{c}{main} function to check for the type of error returned and 
+	print an appropriate error message
+  \item Demonstrate your working program to a lab instructor
+\end{enumerate}
+	
+\section{Modularizing Your Code}
+
+Make your code more modular by organizing components into separate files.
+\begin{enumerate}
+  \item Place all of your function prototypes and enum definitions in a 
+  	header file, \mintinline{text}{flowers.h}
+  \item Place all of your function definitions into a source file, \mintinline{text}{flowers.c}
+  \item Add the appropriate preprocessor directive to \mintinline{text}{flowers.c} and \mintinline{text}{florist.c}
+  \item Compile and link your files:
+  \begin{enumerate}
+    \item Compile (but do not link) the \mintinline{text}{flowers.c} source file 
+    	into an object file using: \mintinline{text}{gcc -c -o flowers.o flowers.c}
+    \item Compile your \mintinline{text}{florist.c} source and link into the 
+	\mintinline{text}{flowers.o} object file using: \mintinline{text}{gcc -o florist flowers.o florist.c}
+  \end{enumerate}
+  \item Demonstrate your results to a lab instructor. 
+\end{enumerate}
+  
+\section{Advanced Activity 1 (Optional)}
+
+In the C language, there is no built-in or standard mechanism to print 
+a human-readable value of an enumerated type.  For example, given 
+an enumeration:
+
+\begin{minted}{c}
+enum { 
+  RED = 1, 
+  WHITE 
+} Color;
+\end{minted} 
+
+there is no built-in function to print the enumeration constant ``red'' 
+or ``white'' given a \mintinline{c}{Color} type.
+
+Modify your program by adding a function or functions so that you 
+are able to print he labels of the enumerated items.  As a hint: the 
+function signature for \mintinline{c}{Color} should be something like
+\mintinline{c}{char * getName(Color c);}
+
+\section{Advanced Activity 2 (Optional)}
+
+Large projects require even more abstraction and tools to manage 
+source code and specify how it gets built.  One tool to facilitate this 
+is a program called Make which uses makefiles--specifications for 
+which pieces of code depend on other pieces and how all pieces 
+get built and combined to build an executable program (or collection 
+of executables).  The use of modern IDEs has made the build process 
+much more manageable, but make is still widely used.  Several 
+useful tutorials exist describing how makefiles can be defined and 
+used.
+\begin{itemize}
+  \item \url{http://www.opussoftware.com/tutorial/TutMakefile.htm}
+  \item \url{http://mrbook.org/tutorials/make/}
+\end{itemize}
+Below is an example makefile.  Copy and paste this text into a file 
+called \mintinline{text}{makefile} in the same directory as your other 
+code.  From the command line, type \mintinline{text}{make} and 
+observe that all of the elements of your program are built automatically!
+
+\begin{minted}{make}
+#Example makefile
+#define a variable, CC which defines the compiler and its flags
+#so that we can reuse it
+CC = gcc -g -Wall
+
+florist: florist.c flowers.o
+  $(CC) -o florist flowers.o florist.c
+
+flowers.o: flowers.h flowers.c
+  $(CC) -c -o flowers.o flowers.c
+
+clean:
+  rm -f *.o *~ florist
+\end{minted}
+
+\end{document}

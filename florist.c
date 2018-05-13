@@ -43,8 +43,8 @@ int main (int argc, char **argv) {
 	return 0;
 }
 
-/* 2. Implement the function get_cost*/
-getCost(Flower flower, Color  color, Arrangement arr){
+/* 2. Implement the function getCost */
+getCost(Flower flower, Color  color, Arrangement arr) {
 
   //you can use your enum in expressions
   //Possible example: if(flower == Rose) {...}
