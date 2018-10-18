@@ -130,10 +130,11 @@ a function: by value or by reference. When an argument (a variable)
 is passed by value to a function, a copy of the value stored in the 
 variable is placed on the program stack and the function uses this 
 copy's value during its execution.  Any changes to the copy are not 
-realized in the calling function but are local to the function.
+realized in the calling function, but are local to the function.
 
 In contrast, when an argument (variable) is passed by reference to a 
-function, the variable's memory address is used.  Locally, the variable 
+function, the variable's memory address is used.  Locally (that is, 
+\emph{inside the function}), the variable 
 is treated as a pointer; to get or set its value, it must be dereferenced 
 using the \mintinline{c}{*} operator.  Any changes to the memory cell pointed to by 
 that pointer are reflected globally in the program and more specifically, 
@@ -226,15 +227,15 @@ values to gray-scale (using one of three techniques) and to sepia.
 The details of how to do this available in the previous lab and 
 are repeated for your convenience below.  
 
-However, the design of those functions was less than idea.  For the
+However, the design of those functions was less than ideal.  For the
 gray scale functions, there was a function for each of the three 
 techniques.  For the sepia conversion, we had to have three separate
 functions (one for each component, red, green, blue).  This was 
-necessary because functions can only return one value; we can't have
+necessary because functions can only return one value.  We can't have
 a function compute and ``return'' all three RGB values.  However,
 if we use pass-by-reference variables, we \emph{can} compute and
 ``return'' multiple values with a single function!  Moreover, we
-can then use the return value to indicate an error with the inputs
+can then use the actual return value to indicate an error with the inputs
 (if any).  
 
 Redesign your functions from the previous lab as follows.  For 
@@ -272,7 +273,7 @@ by reference and then store the results in them.  Again, error codes
 should be returned for invalid input values and you should use the
 enumerated type you defined for error codes.
 
-Finally, add proper documentation to your function's prototypes.
+Finally, add proper documentation to your functions' prototypes.
 
 \subsection{Unit Testing}
 
