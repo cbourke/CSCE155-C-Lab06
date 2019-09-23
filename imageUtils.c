@@ -75,42 +75,6 @@ Pixel ** copyImage(Pixel **image, int height, int width) {
   return copy;
 }
 
-void flipHorizontal(Pixel **image, int height, int width) {
-  for(int i=0; i<height; i++) {
-    for(int j=0; j<width/2; j++) {
-      Pixel temp = image[i][j];
-      image[i][j] = image[i][width-j-1];
-      image[i][width-j-1] = temp;
-    }
-  }
-  return;
-}
-
-void flipVertical(Pixel **image, int height, int width) {
-  for(int i=0; i<height/2; i++) {
-    for(int j=0; j<width; j++) {
-      Pixel temp = image[i][j];
-      image[i][j] = image[height-i-1][j];
-      image[height-i-1][j] = temp;
-    }
-  }
-  return;
-}
-
-Pixel ** rotateClockwise(Pixel **image, int height, int width) {
-  Pixel **rotImage = (Pixel **)malloc(sizeof(Pixel *) * width);
-  rotImage[0] = (Pixel *)malloc(sizeof(Pixel) * (width * height));
-  for(int i=1; i<width; i++) {
-    rotImage[i] = (*rotImage + (height * i));
-  }
-  for(int i=0; i<height; i++) {
-    for(int j=0; j<width; j++) {
-      rotImage[j][height-i-1] = image[i][j];
-    }
-  }
-  return rotImage;
-}
-
 void imageToGrayScale(Pixel **image, int height, int width, Mode m) {
 
   for(int i=0; i<height; i++) {

@@ -1,4 +1,4 @@
 # Computer Science I
-## Lab 06 - Functions & Pointers
+## Lab 6.0 - Functions & Pointers
 
 This is a lab used in Computer Science I (CSCE 155E, CSCE 155H) in the [Department of Computer Science & Engineering](https://cse.unl.edu) at the [University of Nebraska-Lincoln](https://unl.edu).
