@@ -153,9 +153,9 @@ int *ptr = NULL;
 // address of the variable a so that ptr can point to it
 ptr = &a; 
 
-// * is the dereferencing variable: it changes the pointer
-// back into a regular variable so a value can be assigned
-// or accessed:
+// The star: * is the dereferencing operator.  It changes 
+// the pointer back into a regular variable so a value can 
+// accessed or assigned:
 *ptr = 20; //a now holds the value 20
 \end{minted}
 
@@ -227,7 +227,7 @@ values to gray-scale (using one of three techniques) and to sepia.
 The details of how to do this available in the previous lab and 
 are repeated for your convenience below.  
 
-However, the design of those functions was less than ideal.  For the
+The design of those functions was less than ideal.  For the
 gray scale functions, there was a function for each of the three 
 techniques.  For the sepia conversion, we had to have three separate
 functions (one for each component, red, green, blue).  This was 
@@ -275,37 +275,47 @@ enumerated type you defined for error codes.
 
 Finally, add proper documentation to your functions' prototypes.
 
-\subsection{Unit Testing}
+\subsection{Running Unit Tests}
 
 As before, you can test your functions using the full image driver
 program.  To build the project use \mintinline{text}{make} and
-run the executable \mintinline{text}{imageDriver}.  Testing it on
-a few images of your choice is a sort-of \emph{ad-hoc testing} which
-is not very rigorous, not repeatable and not very reliable.  
+run the executable \mintinline{text}{imageDriver}, testing it on
+a few images of your choice.  This is essentially an 
+\emph{ad-hoc test} which is not very rigorous nor reliable 
+and is a manual process.  
 
-In the last lab you wrote several informal unit tests.  This involved
-writing a lot of boilerplate code to run the tests, print out the
-results and keep track of the number passed/failed.  
+In the last lab you wrote several \emph{informal} unit tests.  
+Writing unit tests automates the testing process and is far more
+rigorous.  However, this involved writing a lot of boilerplate 
+code to run the tests, print out the results and keep track 
+of the number passed/failed.  
 
 In practice, it is better to use a more formal unit testing framework
 or library.  There are several such libraries for C, but one that 
 we'll use is cmocka (\url{https://cmocka.org/}).  We have provided
-a starter file, \mintinline{text}{colorUtilsTesterCmocka.c} that already includes
-many tests and examples of how to write tests.  You can build this
-testing suite using 
+unit testing code in a file, \mintinline{text}{colorUtilsTesterCmocka.c} 
+that implements and runs a \emph{suite} of unit tests. You can 
+build this testing suite using :
 
 \mintinline{text}{make colorUtilsTesterCmocka}
 
-and run the resulting executable.  This starter file should be 
+and run the resulting executable:
+
+\mintinline{text}{./colorUtilsTesterCmocka}
+
+This starter file should be 
 sufficient to demonstrate how to use cmocka, but the full documentation 
 can be found here: \url{https://api.cmocka.org/}.  Note that cmocka 
 is already installed on the CSE server.  If you compile on your own 
 machine, you will have to install and troubleshoot cmocka yourself.  
 
 Run the test suite and verify that your code passes all the tests.
-Fix any issues before proceeding.  Then, add \emph{at least 3 more} 
-test cases for each of the functions you wrote and verify that your 
-program is correct.
+Fix any issues or bugs that become apparent as a result of this
+testing.  Show your 100\% completed program to a lab instructor
+and get your worksheet signed off.
+
+Time permitting, add a few of your own test cases to the test
+suite.
 
 \section*{Color Formulas}
 
@@ -336,7 +346,8 @@ $$\begin{array}{ll}
   b' &= 0.272r + 0.534g + 0.131b
 \end{array}$$
 As with the gray-scale techniques, values should be rounded.  If any of
-the RGB values exceeds 255, they should be reset to the maximum, 255.
+the resulting RGB values exceeds 255, they should be reset to the 
+maximum, 255.
 
 \section{Advanced Activity (Optional)}
 

@@ -160,7 +160,6 @@ static void testToGrayScaleValues(void **state) {
   int *values = *((int **)state);
 
   int r = values[0], g = values[1], b = values[2];
-  //int toGrayScale(int *r, int *g, int *b, Mode m) {
 
   toGrayScale(&r, &g, &b, values[3]);
   assert_true(
@@ -199,8 +198,9 @@ int main(int argc, char **argv) {
     {30, 30, 30, 30},
   };
 
-  //
-  int redSepia[] = {255,0,0, 100, 89, 69};
+  //color -> sepia tone
+  // r,g,b (inputs), r,g,b (expected results)
+  int redSepia[] = {255, 0, 0, 100, 89, 69};
 
   //gray scale test values
   //r,g,b (inputs), mode, r,g,b (expected results)
