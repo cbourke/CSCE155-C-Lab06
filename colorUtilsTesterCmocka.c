@@ -1,5 +1,4 @@
 #include<stdlib.h>
-#include<stdio.h>
 #include<stdarg.h>
 #include<stddef.h>
 #include<setjmp.h>
@@ -62,6 +61,7 @@ static void testToSepiaOutOfBounds(void **state) {
   assert_int_not_equal(toSepia(&r,&big,&b), 0);
   assert_int_not_equal(toSepia(&r,&g,&neg), 0);
   assert_int_not_equal(toSepia(&r,&g,&big), 0);
+  assert_int_equal(toSepia(&r,&g,&g), 0);
 }
 
 /**
@@ -134,6 +134,9 @@ static void testToGrayScaleOutOfBounds(void **state) {
   assert_int_not_equal(toGrayScale(&r,&big,&b,AVERAGE), 0);
   assert_int_not_equal(toGrayScale(&r,&g,&neg,AVERAGE), 0);
   assert_int_not_equal(toGrayScale(&r,&g,&big,AVERAGE), 0);
+  assert_int_equal(toGrayScale(&r,&g,&g,AVERAGE), 0);
+  assert_int_equal(toGrayScale(&r,&g,&g,LUMINOSITY), 0);
+  assert_int_equal(toGrayScale(&r,&g,&g,LIGHTNESS), 0);
 }
 
 /**
@@ -160,6 +163,7 @@ static void testToGrayScaleValues(void **state) {
   int *values = *((int **)state);
 
   int r = values[0], g = values[1], b = values[2];
+  //int toGrayScale(int *r, int *g, int *b, Mode m) {
 
   toGrayScale(&r, &g, &b, values[3]);
   assert_true(
@@ -198,15 +202,100 @@ int main(int argc, char **argv) {
     {30, 30, 30, 30},
   };
 
-  //color -> sepia tone
+  // color -> sepia tone
   // r,g,b (inputs), r,g,b (expected results)
-  int redSepia[] = {255, 0, 0, 100, 89, 69};
+  int sepiaTests[][6] = {
+          // Pure RGB
+          { 255, 0,   0, 100,  89,  69},
+          { 0, 255,   0, 196, 175, 136},
+          { 0,   0, 255,  48,  43,  33},
 
-  //gray scale test values
-  //r,g,b (inputs), mode, r,g,b (expected results)
-  int redAverage[] = {255,0,0,AVERAGE,85,85,85};
-  int redLightness[] = {255,0,0,LIGHTNESS,128,128,128};
-  int redLuminosity[] = {255,0,0,LUMINOSITY,54,54,54};
+          // Errors should not change the r, g, and b values
+          {  355,    0,    0,  355,    0,    0 },
+          {    0,  355,    0,    0,  355,    0 },
+          {    0,    0,  355,    0,    0,  355 },
+          { -355,    0,    0, -355,    0,    0 },
+          {    0, -355,    0,    0, -355,    0 },
+          {    0,    0, -355,    0,    0, -355 },
+
+          // General tests
+          { 123, 100,  20, 129, 115,  89},
+          { 200, 128,  64, 189, 168, 131},
+          {  16,  32,  64,  43,  38,  30},
+          {  90, 190, 228, 225, 200, 156},
+          {  12,  36,  75,  47,  41,  32},
+          {  47,  41,  32,  56,  50,  39},
+          {  56, 187, 132, 191, 170, 132},
+  };
+
+  // gray scale test values
+  // r,g,b (inputs), mode, r,g,b (expected results)
+  int greyScaleTests[][7] = {
+          // Pure RGB
+          {255, 0, 0,    AVERAGE,  85,  85,  85},
+          {255, 0, 0,  LIGHTNESS, 128, 128, 128},
+          {255, 0, 0, LUMINOSITY,  54,  54,  54},
+          {0, 255, 0,    AVERAGE,  85,  85,  85},
+          {0, 255, 0,  LIGHTNESS, 128, 128, 128},
+          {0, 255, 0, LUMINOSITY, 184, 184, 184},
+          {0, 0, 255,    AVERAGE,  85,  85,  85},
+          {0, 0, 255,  LIGHTNESS, 128, 128, 128},
+          {0, 0, 255, LUMINOSITY,  18,  18,  18},
+
+          // Errors should not change the r, g, and b values
+          { 300, 300, 300,    AVERAGE, 300, 300, 300},
+          { 300, 300, 300,  LIGHTNESS, 300, 300, 300},
+          { 300, 300, 300, LUMINOSITY, 300, 300, 300},
+
+          // General tests
+          {  42,  17,   9,    AVERAGE,  23,  23,  23},
+          { 250, 128, 212,    AVERAGE, 197, 197, 197},
+          {  11, 204, 160,    AVERAGE, 125, 125, 125},
+          { 218, 232, 249,    AVERAGE, 233, 233, 233},
+          { 130, 248,   0,    AVERAGE, 126, 126, 126},
+          {  35, 102, 157,    AVERAGE,  98,  98,  98},
+          {   4,  10, 180,    AVERAGE,  65,  65,  65},
+          {  71,  77, 227,    AVERAGE, 125, 125, 125},
+          { 233, 119, 131,    AVERAGE, 161, 161, 161},
+          { 219,  47, 219,    AVERAGE, 162, 162, 162},
+          { 103, 177, 202,    AVERAGE, 161, 161, 161},
+          { 123, 177, 125,    AVERAGE, 142, 142, 142},
+          {  12, 105, 219,    AVERAGE, 112, 112, 112},
+          { 115, 106,  80,    AVERAGE, 100, 100, 100},
+          { 253, 231,  22,    AVERAGE, 169, 169, 169},
+
+          {  36, 118, 102,  LIGHTNESS,  77,  77,  77},
+          { 244,  75, 177,  LIGHTNESS, 160, 160, 160},
+          { 150,  83, 249,  LIGHTNESS, 166, 166, 166},
+          {   9,  45,  49,  LIGHTNESS,  29,  29,  29},
+          {  56, 145, 123,  LIGHTNESS, 101, 101, 101},
+          { 157,  15,  61,  LIGHTNESS,  86,  86,  86},
+          { 148,  37,   9,  LIGHTNESS,  79,  79,  79},
+          {  28, 196, 130,  LIGHTNESS, 112, 112, 112},
+          {  22, 219,  87,  LIGHTNESS, 121, 121, 121},
+          { 183, 202,  22,  LIGHTNESS, 112, 112, 112},
+          { 115,  86, 176,  LIGHTNESS, 131, 131, 131},
+          {  24, 168,   2,  LIGHTNESS,  85,  85,  85},
+          { 252, 191,   3,  LIGHTNESS, 128, 128, 128},
+          { 163,   7, 150,  LIGHTNESS,  85,  85,  85},
+          { 105, 217, 235,  LIGHTNESS, 170, 170, 170},
+
+          { 240,  84, 127, LUMINOSITY, 120, 120, 120},
+          { 109,  30, 130, LUMINOSITY,  54,  54,  54},
+          { 121,   1, 118, LUMINOSITY,  34,  34,  34},
+          { 144,  24, 177, LUMINOSITY,  60,  60,  60},
+          { 183,  38,  96, LUMINOSITY,  73,  73,  73},
+          { 167,  20,  73, LUMINOSITY,  55,  55,  55},
+          { 252, 200,  75, LUMINOSITY, 202, 202, 202},
+          {  98, 140, 164, LUMINOSITY, 133, 133, 133},
+          {  21, 207,  91, LUMINOSITY, 160, 160, 160},
+          {  52, 203, 128, LUMINOSITY, 166, 166, 166},
+          {  39, 181, 125, LUMINOSITY, 147, 147, 147},
+          {  27, 230, 245, LUMINOSITY, 188, 188, 188},
+          { 132, 182,  77, LUMINOSITY, 164, 164, 164},
+          { 194, 182, 246, LUMINOSITY, 189, 189, 189},
+          {  21,  10,   4, LUMINOSITY,  12,  12,  12}
+  };
 
   const struct CMUnitTest tests[] = {
     cmocka_unit_test_prestate(testMaxValues, &maxTestCases[0]),
@@ -235,16 +324,85 @@ int main(int argc, char **argv) {
     cmocka_unit_test(testToSepiaOutOfBounds),
     cmocka_unit_test(testToSepia001),
 
-    cmocka_unit_test_prestate(testToSepiaValues, &redSepia),
+    cmocka_unit_test_prestate(testToSepiaValues, &sepiaTests[0]),
+    cmocka_unit_test_prestate(testToSepiaValues, &sepiaTests[1]),
+    cmocka_unit_test_prestate(testToSepiaValues, &sepiaTests[2]),
+    cmocka_unit_test_prestate(testToSepiaValues, &sepiaTests[3]),
+    cmocka_unit_test_prestate(testToSepiaValues, &sepiaTests[4]),
+    cmocka_unit_test_prestate(testToSepiaValues, &sepiaTests[5]),
+    cmocka_unit_test_prestate(testToSepiaValues, &sepiaTests[6]),
+    cmocka_unit_test_prestate(testToSepiaValues, &sepiaTests[7]),
+    cmocka_unit_test_prestate(testToSepiaValues, &sepiaTests[8]),
+    cmocka_unit_test_prestate(testToSepiaValues, &sepiaTests[9]),
+    cmocka_unit_test_prestate(testToSepiaValues, &sepiaTests[10]),
+    cmocka_unit_test_prestate(testToSepiaValues, &sepiaTests[11]),
+    cmocka_unit_test_prestate(testToSepiaValues, &sepiaTests[12]),
+    cmocka_unit_test_prestate(testToSepiaValues, &sepiaTests[13]),
+    cmocka_unit_test_prestate(testToSepiaValues, &sepiaTests[14]),
+    cmocka_unit_test_prestate(testToSepiaValues, &sepiaTests[15]),
 
     cmocka_unit_test(testToGrayScaleNull),
     cmocka_unit_test(testToGrayScaleMode),
     cmocka_unit_test(testToGrayScaleOutOfBounds),
     cmocka_unit_test(testToGrayScale001),
 
-    cmocka_unit_test_prestate(testToGrayScaleValues, &redAverage),
-    cmocka_unit_test_prestate(testToGrayScaleValues, &redLightness),
-    cmocka_unit_test_prestate(testToGrayScaleValues, &redLuminosity)
+    cmocka_unit_test_prestate(testToGrayScaleValues, &greyScaleTests[0]),
+    cmocka_unit_test_prestate(testToGrayScaleValues, &greyScaleTests[1]),
+    cmocka_unit_test_prestate(testToGrayScaleValues, &greyScaleTests[2]),
+    cmocka_unit_test_prestate(testToGrayScaleValues, &greyScaleTests[3]),
+    cmocka_unit_test_prestate(testToGrayScaleValues, &greyScaleTests[4]),
+    cmocka_unit_test_prestate(testToGrayScaleValues, &greyScaleTests[5]),
+    cmocka_unit_test_prestate(testToGrayScaleValues, &greyScaleTests[6]),
+    cmocka_unit_test_prestate(testToGrayScaleValues, &greyScaleTests[7]),
+    cmocka_unit_test_prestate(testToGrayScaleValues, &greyScaleTests[8]),
+    cmocka_unit_test_prestate(testToGrayScaleValues, &greyScaleTests[9]),
+    cmocka_unit_test_prestate(testToGrayScaleValues, &greyScaleTests[10]),
+    cmocka_unit_test_prestate(testToGrayScaleValues, &greyScaleTests[11]),
+    cmocka_unit_test_prestate(testToGrayScaleValues, &greyScaleTests[12]),
+    cmocka_unit_test_prestate(testToGrayScaleValues, &greyScaleTests[13]),
+    cmocka_unit_test_prestate(testToGrayScaleValues, &greyScaleTests[14]),
+    cmocka_unit_test_prestate(testToGrayScaleValues, &greyScaleTests[15]),
+    cmocka_unit_test_prestate(testToGrayScaleValues, &greyScaleTests[16]),
+    cmocka_unit_test_prestate(testToGrayScaleValues, &greyScaleTests[17]),
+    cmocka_unit_test_prestate(testToGrayScaleValues, &greyScaleTests[18]),
+    cmocka_unit_test_prestate(testToGrayScaleValues, &greyScaleTests[19]),
+    cmocka_unit_test_prestate(testToGrayScaleValues, &greyScaleTests[20]),
+    cmocka_unit_test_prestate(testToGrayScaleValues, &greyScaleTests[21]),
+    cmocka_unit_test_prestate(testToGrayScaleValues, &greyScaleTests[22]),
+    cmocka_unit_test_prestate(testToGrayScaleValues, &greyScaleTests[23]),
+    cmocka_unit_test_prestate(testToGrayScaleValues, &greyScaleTests[24]),
+    cmocka_unit_test_prestate(testToGrayScaleValues, &greyScaleTests[25]),
+    cmocka_unit_test_prestate(testToGrayScaleValues, &greyScaleTests[26]),
+    cmocka_unit_test_prestate(testToGrayScaleValues, &greyScaleTests[27]),
+    cmocka_unit_test_prestate(testToGrayScaleValues, &greyScaleTests[28]),
+    cmocka_unit_test_prestate(testToGrayScaleValues, &greyScaleTests[29]),
+    cmocka_unit_test_prestate(testToGrayScaleValues, &greyScaleTests[30]),
+    cmocka_unit_test_prestate(testToGrayScaleValues, &greyScaleTests[31]),
+    cmocka_unit_test_prestate(testToGrayScaleValues, &greyScaleTests[32]),
+    cmocka_unit_test_prestate(testToGrayScaleValues, &greyScaleTests[33]),
+    cmocka_unit_test_prestate(testToGrayScaleValues, &greyScaleTests[34]),
+    cmocka_unit_test_prestate(testToGrayScaleValues, &greyScaleTests[35]),
+    cmocka_unit_test_prestate(testToGrayScaleValues, &greyScaleTests[36]),
+    cmocka_unit_test_prestate(testToGrayScaleValues, &greyScaleTests[37]),
+    cmocka_unit_test_prestate(testToGrayScaleValues, &greyScaleTests[38]),
+    cmocka_unit_test_prestate(testToGrayScaleValues, &greyScaleTests[39]),
+    cmocka_unit_test_prestate(testToGrayScaleValues, &greyScaleTests[40]),
+    cmocka_unit_test_prestate(testToGrayScaleValues, &greyScaleTests[41]),
+    cmocka_unit_test_prestate(testToGrayScaleValues, &greyScaleTests[42]),
+    cmocka_unit_test_prestate(testToGrayScaleValues, &greyScaleTests[43]),
+    cmocka_unit_test_prestate(testToGrayScaleValues, &greyScaleTests[44]),
+    cmocka_unit_test_prestate(testToGrayScaleValues, &greyScaleTests[45]),
+    cmocka_unit_test_prestate(testToGrayScaleValues, &greyScaleTests[46]),
+    cmocka_unit_test_prestate(testToGrayScaleValues, &greyScaleTests[47]),
+    cmocka_unit_test_prestate(testToGrayScaleValues, &greyScaleTests[48]),
+    cmocka_unit_test_prestate(testToGrayScaleValues, &greyScaleTests[49]),
+    cmocka_unit_test_prestate(testToGrayScaleValues, &greyScaleTests[50]),
+    cmocka_unit_test_prestate(testToGrayScaleValues, &greyScaleTests[51]),
+    cmocka_unit_test_prestate(testToGrayScaleValues, &greyScaleTests[52]),
+    cmocka_unit_test_prestate(testToGrayScaleValues, &greyScaleTests[53]),
+    cmocka_unit_test_prestate(testToGrayScaleValues, &greyScaleTests[54]),
+    cmocka_unit_test_prestate(testToGrayScaleValues, &greyScaleTests[55]),
+    cmocka_unit_test_prestate(testToGrayScaleValues, &greyScaleTests[56])
   };
 
   return cmocka_run_group_tests(tests, NULL, NULL);
