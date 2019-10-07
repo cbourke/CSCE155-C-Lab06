@@ -351,22 +351,11 @@ maximum, 255.
 
 \section{Advanced Activity (Optional)}
 
-Large projects require even more abstraction and tools to manage 
-source code and specify how it gets built.  One tool to facilitate this 
-is a program called Make which uses makefiles--specifications for 
-which pieces of code depend on other pieces and how all pieces 
-get built and combined to build an executable program (or collection 
-of executables).  The use of modern IDEs has made the build process 
-much more manageable, but make is still widely used.  Several 
-useful tutorials exist describing how makefiles can be defined and 
-used.
-\begin{itemize}
-  \item \url{http://www.opussoftware.com/tutorial/TutMakefile.htm}
-  \item \url{http://mrbook.org/tutorials/make/}
-\end{itemize}
-We have provided a makefile for this lab.  Read through the tutorials
-above and then read through the makefile and understand how it works.
-Write your own makefile for your next assignment to simplify the
-compilation process.
+Cmocka is only one of many possible unit testing frameworks available
+for C.  Another example is Google Test 
+(\url{https://github.com/google/googletest}).  Read the following tutorial 
+\url{http://notes.eatonphil.com/unit-testing-c-code-with-gtest.html} and
+rewrite the cmocka unit tests using Google Test's framework/library instead
+in order to get exposure to how different unit testing libraries are designed.
 
 \end{document}
