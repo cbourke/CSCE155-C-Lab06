@@ -1,4 +1,8 @@
-
+/**
+ * This program converts an input image to gray
+ * scale or sepia depending on the provided
+ * command line inputs.
+ */
 #include <stdlib.h>
 #include <stdio.h>
 

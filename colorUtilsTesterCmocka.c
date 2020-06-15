@@ -1,9 +1,15 @@
-#include<stdlib.h>
-#include<stdarg.h>
-#include<stddef.h>
-#include<setjmp.h>
-#include<math.h>
-#include<cmocka.h>
+/**
+ * This is a collection of unit tests for the
+ * color utils library using the cmocka unit 
+ * test framework.
+ *
+ */
+#include <stdlib.h>
+#include <stdarg.h>
+#include <stddef.h>
+#include <setjmp.h>
+#include <math.h>
+#include <cmocka.h>
 
 #include "colorUtils.h"
 
