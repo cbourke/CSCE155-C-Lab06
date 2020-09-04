@@ -8,7 +8,7 @@ FLAGS = -Wall
 INCLUDES = -lm
 
 imageDriver: imageUtils.o colorUtils.o imageDriver.c
-	$(CC) $(FLAGS) $(INCLUDES) imageUtils.o colorUtils.o imageDriver.c -o imageDriver
+	$(CC) $(FLAGS) $(INCLUDES) imageUtils.o colorUtils.o imageDriver.c -o imageDriver $(INCLUDES)
 
 imageUtils.o: imageUtils.c imageUtils.h
 	$(CC) $(FLAGS) $(INCLUDES) -c imageUtils.c -o imageUtils.o
