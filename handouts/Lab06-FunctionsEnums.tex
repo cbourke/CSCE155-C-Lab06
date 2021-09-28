@@ -287,16 +287,17 @@ Finally, add proper documentation to your functions' prototypes.
 
 \subsection{Running Unit Tests}
 
-\textbf{NOTE}: if you are using the CS50 IDE you may need to (re)install
-cmocka using the following command (and answering \mintinline{text}{Y}
-when prompted):
-
-\mintinline{text}{sudo apt-get install libcmocka-dev libcmocka0}
-
-As before, you can test your functions using the full image driver
+%\textbf{NOTE}: if you are using the CS50 IDE you may need to (re)install
+%cmocka using the following command (and answering \mintinline{text}{Y}
+%when prompted):
+%
+%\mintinline{text}{sudo apt-get install libcmocka-dev libcmocka0}
+%
+As with the previous lab, you can test your functions using the full image driver
 program.  To build the project use \mintinline{text}{make} and
 run the executable \mintinline{text}{imageDriver}, testing it on
-a few images of your choice.  This is essentially an 
+a few images of your choice (a few have been included in the
+project.  This is essentially an 
 \emph{ad-hoc test} which is not very rigorous nor reliable 
 and is a manual process.  
 
@@ -321,9 +322,10 @@ and run the resulting executable:
 
 This starter file should be sufficient to demonstrate how to 
 use cmocka, but the full documentation 
-can be found here: \url{https://api.cmocka.org/}.  Note that cmocka 
-is already installed on the CSE server.  If you compile on your own 
-machine, you will have to install and troubleshoot cmocka yourself.  
+can be found here: \url{https://api.cmocka.org/}.  
+%Note that cmocka 
+%is already installed on the CSE server.  If you compile on your own 
+%machine, you will have to install and troubleshoot cmocka yourself.  
 
 Run the test suite and verify that your code passes \emph{all} 
 the tests.  Fix any issues or bugs that become apparent as a 
