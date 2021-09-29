@@ -1,6 +1,6 @@
 /**
  * This is a collection of unit tests for the
- * color utils library using the cmocka unit 
+ * color utils library using the cmocka unit
  * test framework.
  *
  */
@@ -169,7 +169,6 @@ static void testToGrayScaleValues(void **state) {
   int *values = *((int **)state);
 
   int r = values[0], g = values[1], b = values[2];
-  //int toGrayScale(int *r, int *g, int *b, Mode m) {
 
   toGrayScale(&r, &g, &b, values[3]);
   assert_true(
