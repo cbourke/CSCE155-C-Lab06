@@ -285,7 +285,7 @@ $$\frac{r + g + b}{3}$$
 The second technique, known as the "lightness" technique averages the
 most prominent and least prominent colors:
 
-$$\frac{\max \left\\{r, g, b\right\\} + \min {r, g, b}}{2}$$
+$$\frac{\max \left\\{r, g, b\right\\} + \min\\{r, g, b\\}}{2}$$
 
 The luminosity technique uses a weighted average to account for a human
 perceptual preference toward green, setting all three values to:
