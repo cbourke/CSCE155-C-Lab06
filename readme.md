@@ -251,7 +251,12 @@ out the results and keep track of the number passed/failed.
 
 In practice, it is better to use a more formal unit testing framework or
 library. There are several such libraries for C, but one that we'll use
-is cmocka (<https://cmocka.org/>). We have provided unit testing code in
+is cmocka (<https://cmocka.org/>). First, you'll need to make sure that
+cmocka is installed in your IDE.  Run the following command:
+
+`sudo apt-get install libcmocka-dev libcmocka0 cmocka-doc`
+
+to install cmocka.  We have provided unit testing code in
 a file, `colorUtilsTesterCmocka.c` that implements and runs a
 *suite* of unit tests. You can build this testing suite using :
 
