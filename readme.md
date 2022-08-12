@@ -11,4 +11,7 @@ This is a lab used in Computer Science I (CSCE 155E, CSCE 155H) in the [Departme
 ## Latex Test
 
 When $a \ne 0$, there are two solutions to $(ax^2 + bx + c = 0)$ and they are
-$$ x = {-b \pm \sqrt{b^2-4ac} \over 2a} $$
+
+$$x = {-b \pm \sqrt{b^2-4ac} \over 2a}$$
+
+Looks like display requires own line?
