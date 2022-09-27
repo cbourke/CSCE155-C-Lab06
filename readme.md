@@ -3,6 +3,7 @@
 [School of Computing](https://computing.unl.edu)  
 [College of Engineering](https://engineering.unl.edu/)  
 [University of Nebraska-Lincoln](https://unl.edu)  
+[University of Nebraska-Omaha](https://unomaha.edu)  
 
 This lab introduces the use of pointers with functions, passing
 by reference, and using enumerated types for error handling.  It
@@ -11,15 +12,9 @@ framework.
 
 ## Prior to Lab
 
-1.  Read and familiarize yourself with this handout.
-
-2.  Read Chapters 5--6 and 18--19 of the [Computer Science
-    I](http://cse.unl.edu/~cbourke/ComputerScienceOne.pdf) textbook
-
-3.  Watch Videos 6.1 thru 6.5 of the [Computer Science
-    I](https://www.youtube.com/playlist?list=PL4IH6CVPpTZVkiEnCEOdGbYsFEdtKc5Bx)
-    video series
-
+* Read and familiarize yourself with this handout.
+* Read the required chapters(s) of the textbook as
+  outlined in the course schedule.
 
 ## Peer Programming Pair-Up
 
@@ -57,7 +52,7 @@ so will negatively impact your ability to collaborate and work with
 others which may mean that you will not be able to complete the
 lab.  
 
-## Lab Objectives & Topics
+# Lab Objectives & Topics
 
 At the end of this lab you should be familiar with the following
 
@@ -273,8 +268,8 @@ Run the test suite and verify that your code passes *all* the tests. Fix
 any issues or bugs that become apparent as a result of this testing.
 Passing 100% of the provided test cases will suffice to complete the
 lab. However, we *highly encourage* you to read the cmocka test file to
-understand how the tests are setup and performed and then to add a few
-of your own test cases.
+understand how the tests are setup and performed and then to add *at least
+three of your own test cases.
 
 # Color Formulas
 
@@ -321,19 +316,12 @@ reset to the maximum, 255.
 
     -   `colorUtilsTesterCmocka.c`
 
-    through the webhandin (<https://cse-apps.unl.edu/handin>) using your
-    cse login and password.
+    through the handin and verify your program compiles and runs using
+    the grader.
 
 2.  Even if you worked with a partner, you *both* should turn in all
     files.
 
-3.  Verify your program by grading yourself through the webgrader
-    using the same credentials.
-
-4.  Recall that both expected output and your program's output will be
-    displayed. The formatting may differ slightly which is fine. As long
-    as your program successfully compiles, runs and outputs the *same
-    values*, it is considered correct.
 
 # Advanced Activity (Optional)
 
