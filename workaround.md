@@ -1,8 +1,6 @@
 
-
-
 The good folks in the admin department of CS50 IDE revoked sudoer status of
-default ubunut account sometime in early 2021.  As a result, all of the
+default ubuntu account sometime in early 2021.  As a result, all of the
 directives in labs and other handouts that required the installation of
 packages (such as cmocka) no longer worked.
 
@@ -48,3 +46,18 @@ colorUtilsTesterCmockaWorkaround: colorUtils.o colorUtilsTesterCmocka.c
   * `-I` tells gcc where to look for included header files
   * `-L.` tells gcc to Look for libraries in the cwd
   * `-l :libcmocka-static.a` tells gcc to use the *specific* file (the colon prefix)
+
+### codePost.io Notes
+
+The default container does not work/compile even if `apk add cmocka` is used.  To
+get cmocka to work, you need to:
+
+- Use a custom container using Ubuntu and add a custom install for gcc and cmocka
+  respectively:
+  ```text
+  apt --yes install build-essential
+  apt-get --yes install libcmocka-dev libcmocka0 cmocka-doc
+  ```
+
+- Then compile with:
+  `gcc colorUtils.c colorUtilsTesterCmocka.c -lm -l cmocka`

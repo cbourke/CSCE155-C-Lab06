@@ -268,8 +268,8 @@ Run the test suite and verify that your code passes *all* the tests. Fix
 any issues or bugs that become apparent as a result of this testing.
 Passing 100% of the provided test cases will suffice to complete the
 lab. However, we *highly encourage* you to read the cmocka test file to
-understand how the tests are setup and performed and then to add *at least
-three of your own test cases.
+understand how the tests are setup and performed and then try to add
+at least a few of your own test case.
 
 # Color Formulas
 
@@ -316,8 +316,7 @@ reset to the maximum, 255.
 
     -   `colorUtilsTesterCmocka.c`
 
-    through the handin and verify your program compiles and runs using
-    the grader.
+    Be sure your program passes all tests to get credit.
 
 2.  Even if you worked with a partner, you *both* should turn in all
     files.
