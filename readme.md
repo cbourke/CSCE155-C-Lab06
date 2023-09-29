@@ -247,7 +247,11 @@ out the results and keep track of the number passed/failed.
 In practice, it is better to use a more formal unit testing framework or
 library. There are several such libraries for C, but one that we'll use
 is cmocka (<https://cmocka.org/>). First, you'll need to make sure that
-cmocka is installed in your IDE.  Run the following command:
+cmocka is installed in your IDE.  Run the following commands:
+
+`sudo apt update`
+
+then:
 
 `sudo apt-get install libcmocka-dev libcmocka0 cmocka-doc`
 
