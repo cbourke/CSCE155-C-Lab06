@@ -67,7 +67,7 @@ static void testToSepiaOutOfBounds(void **state) {
   assert_int_not_equal(toSepia(&r,&big,&b), 0);
   assert_int_not_equal(toSepia(&r,&g,&neg), 0);
   assert_int_not_equal(toSepia(&r,&g,&big), 0);
-  assert_int_equal(toSepia(&r,&g,&g), 0);
+  assert_int_equal(toSepia(&r,&g,&b), 0);
 }
 
 /**
@@ -140,9 +140,9 @@ static void testToGrayScaleOutOfBounds(void **state) {
   assert_int_not_equal(toGrayScale(&r,&big,&b,AVERAGE), 0);
   assert_int_not_equal(toGrayScale(&r,&g,&neg,AVERAGE), 0);
   assert_int_not_equal(toGrayScale(&r,&g,&big,AVERAGE), 0);
-  assert_int_equal(toGrayScale(&r,&g,&g,AVERAGE), 0);
-  assert_int_equal(toGrayScale(&r,&g,&g,LUMINOSITY), 0);
-  assert_int_equal(toGrayScale(&r,&g,&g,LIGHTNESS), 0);
+  assert_int_equal(toGrayScale(&r,&g,&b,AVERAGE), 0);
+  assert_int_equal(toGrayScale(&r,&g,&b,LUMINOSITY), 0);
+  assert_int_equal(toGrayScale(&r,&g,&b,LIGHTNESS), 0);
 }
 
 /**
