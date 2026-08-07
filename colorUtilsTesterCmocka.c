@@ -22,7 +22,11 @@
 static void testMinValues(void **state) {
   //cast the generic state to an int array
   int *values = *((int **)state);
-  assert_true( min(values[0], values[1], values[2]) == values[3]);
+  int result = min(values[0], values[1], values[2]);
+  if (result != values[3]) {
+    fail_msg("min(%d, %d, %d) expected %d but got %d",
+             values[0], values[1], values[2], values[3], result);
+  }
 }
 
 /**
@@ -34,7 +38,11 @@ static void testMinValues(void **state) {
 static void testMaxValues(void **state) {
   //cast the generic state to an int array
   int *values = *((int **)state);
-  assert_true( max(values[0], values[1], values[2]) == values[3]);
+  int result = max(values[0], values[1], values[2]);
+  if (result != values[3]) {
+    fail_msg("max(%d, %d, %d) expected %d but got %d",
+             values[0], values[1], values[2], values[3], result);
+  }
 }
 
 /**
@@ -47,9 +55,15 @@ static void testMaxValues(void **state) {
  */
 static void testToSepiaNull(void **state) {
   int r = 0, g = 0, b = 0;
-  assert_int_not_equal(toSepia(NULL,&g,&b), 0);
-  assert_int_not_equal(toSepia(&r,NULL,&b), 0);
-  assert_int_not_equal(toSepia(&r,&g,NULL), 0);
+  if (toSepia(NULL,&g,&b) == 0) {
+    fail_msg("toSepia should return non-zero when r pointer is NULL, but returned 0");
+  }
+  if (toSepia(&r,NULL,&b) == 0) {
+    fail_msg("toSepia should return non-zero when g pointer is NULL, but returned 0");
+  }
+  if (toSepia(&r,&g,NULL) == 0) {
+    fail_msg("toSepia should return non-zero when b pointer is NULL, but returned 0");
+  }
 
 }
 
@@ -61,13 +75,27 @@ static void testToSepiaNull(void **state) {
  */
 static void testToSepiaOutOfBounds(void **state) {
   int r = 0, g = 0, b = 0, big = 256, neg = -1;
-  assert_int_not_equal(toSepia(&neg,&g,&b), 0);
-  assert_int_not_equal(toSepia(&big,&g,&b), 0);
-  assert_int_not_equal(toSepia(&r,&neg,&b), 0);
-  assert_int_not_equal(toSepia(&r,&big,&b), 0);
-  assert_int_not_equal(toSepia(&r,&g,&neg), 0);
-  assert_int_not_equal(toSepia(&r,&g,&big), 0);
-  assert_int_equal(toSepia(&r,&g,&b), 0);
+  if (toSepia(&neg,&g,&b) == 0) {
+    fail_msg("toSepia should return non-zero when r is negative (%d), but returned 0", neg);
+  }
+  if (toSepia(&big,&g,&b) == 0) {
+    fail_msg("toSepia should return non-zero when r is out of bounds (%d), but returned 0", big);
+  }
+  if (toSepia(&r,&neg,&b) == 0) {
+    fail_msg("toSepia should return non-zero when g is negative (%d), but returned 0", neg);
+  }
+  if (toSepia(&r,&big,&b) == 0) {
+    fail_msg("toSepia should return non-zero when g is out of bounds (%d), but returned 0", big);
+  }
+  if (toSepia(&r,&g,&neg) == 0) {
+    fail_msg("toSepia should return non-zero when b is negative (%d), but returned 0", neg);
+  }
+  if (toSepia(&r,&g,&big) == 0) {
+    fail_msg("toSepia should return non-zero when b is out of bounds (%d), but returned 0", big);
+  }
+  if (toSepia(&r,&g,&b) != 0) {
+    fail_msg("toSepia should return 0 for valid in-bounds values (r=%d, g=%d, b=%d), but returned non-zero", r, g, b);
+  }
 }
 
 /**
@@ -78,7 +106,9 @@ static void testToSepia001(void **state) {
   //steel blue:
   int r = 70, g = 130, b = 180;
   toSepia(&r,&g,&b);
-  assert_true(r == 162 && g == 144 && b == 112);
+  if (!(r == 162 && g == 144 && b == 112)) {
+    fail_msg("toSepia(70, 130, 180) expected (162, 144, 112) but got (%d, %d, %d)", r, g, b);
+  }
 }
 
 /**
@@ -95,7 +125,12 @@ static void testToSepiaValues(void **state) {
   int g = values[1];
   int b = values[2];
   toSepia(&r, &g, &b);
-  assert_true(r == values[3] && g == values[4] && b == values[5]);
+  if (!(r == values[3] && g == values[4] && b == values[5])) {
+    fail_msg("toSepia(%d, %d, %d) expected (%d, %d, %d) but got (%d, %d, %d)",
+             values[0], values[1], values[2],
+             values[3], values[4], values[5],
+             r, g, b);
+  }
 }
 
 /**
@@ -108,9 +143,15 @@ static void testToSepiaValues(void **state) {
  */
 static void testToGrayScaleNull(void **state) {
   int r = 0, g = 0, b = 0;
-  assert_int_not_equal(toGrayScale(NULL,&g,&b,AVERAGE), 0);
-  assert_int_not_equal(toGrayScale(&r,NULL,&b,AVERAGE), 0);
-  assert_int_not_equal(toGrayScale(&r,&g,NULL,AVERAGE), 0);
+  if (toGrayScale(NULL,&g,&b,AVERAGE) == 0) {
+    fail_msg("toGrayScale should return non-zero when r pointer is NULL, but returned 0");
+  }
+  if (toGrayScale(&r,NULL,&b,AVERAGE) == 0) {
+    fail_msg("toGrayScale should return non-zero when g pointer is NULL, but returned 0");
+  }
+  if (toGrayScale(&r,&g,NULL,AVERAGE) == 0) {
+    fail_msg("toGrayScale should return non-zero when b pointer is NULL, but returned 0");
+  }
 }
 
 /**
@@ -122,8 +163,12 @@ static void testToGrayScaleNull(void **state) {
  */
 static void testToGrayScaleMode(void **state) {
   int r = 0, g = 0, b = 0;
-  assert_int_not_equal(toGrayScale(NULL,&g,&b,0), 0);
-  assert_int_not_equal(toGrayScale(&r,NULL,&b,4), 0);
+  if (toGrayScale(NULL,&g,&b,0) == 0) {
+    fail_msg("toGrayScale should return non-zero for invalid mode 0, but returned 0");
+  }
+  if (toGrayScale(&r,NULL,&b,4) == 0) {
+    fail_msg("toGrayScale should return non-zero for invalid mode 4, but returned 0");
+  }
 }
 
 /**
@@ -134,15 +179,33 @@ static void testToGrayScaleMode(void **state) {
  */
 static void testToGrayScaleOutOfBounds(void **state) {
   int r = 0, g = 0, b = 0, big = 256, neg = -1;
-  assert_int_not_equal(toGrayScale(&neg,&g,&b,AVERAGE), 0);
-  assert_int_not_equal(toGrayScale(&big,&g,&b,AVERAGE), 0);
-  assert_int_not_equal(toGrayScale(&r,&neg,&b,AVERAGE), 0);
-  assert_int_not_equal(toGrayScale(&r,&big,&b,AVERAGE), 0);
-  assert_int_not_equal(toGrayScale(&r,&g,&neg,AVERAGE), 0);
-  assert_int_not_equal(toGrayScale(&r,&g,&big,AVERAGE), 0);
-  assert_int_equal(toGrayScale(&r,&g,&b,AVERAGE), 0);
-  assert_int_equal(toGrayScale(&r,&g,&b,LUMINOSITY), 0);
-  assert_int_equal(toGrayScale(&r,&g,&b,LIGHTNESS), 0);
+  if (toGrayScale(&neg,&g,&b,AVERAGE) == 0) {
+    fail_msg("toGrayScale should return non-zero when r is negative (%d), but returned 0", neg);
+  }
+  if (toGrayScale(&big,&g,&b,AVERAGE) == 0) {
+    fail_msg("toGrayScale should return non-zero when r is out of bounds (%d), but returned 0", big);
+  }
+  if (toGrayScale(&r,&neg,&b,AVERAGE) == 0) {
+    fail_msg("toGrayScale should return non-zero when g is negative (%d), but returned 0", neg);
+  }
+  if (toGrayScale(&r,&big,&b,AVERAGE) == 0) {
+    fail_msg("toGrayScale should return non-zero when g is out of bounds (%d), but returned 0", big);
+  }
+  if (toGrayScale(&r,&g,&neg,AVERAGE) == 0) {
+    fail_msg("toGrayScale should return non-zero when b is negative (%d), but returned 0", neg);
+  }
+  if (toGrayScale(&r,&g,&big,AVERAGE) == 0) {
+    fail_msg("toGrayScale should return non-zero when b is out of bounds (%d), but returned 0", big);
+  }
+  if (toGrayScale(&r,&g,&b,AVERAGE) != 0) {
+    fail_msg("toGrayScale should return 0 for valid in-bounds values with AVERAGE mode (r=%d, g=%d, b=%d), but returned non-zero", r, g, b);
+  }
+  if (toGrayScale(&r,&g,&b,LUMINOSITY) != 0) {
+    fail_msg("toGrayScale should return 0 for valid in-bounds values with LUMINOSITY mode (r=%d, g=%d, b=%d), but returned non-zero", r, g, b);
+  }
+  if (toGrayScale(&r,&g,&b,LIGHTNESS) != 0) {
+    fail_msg("toGrayScale should return 0 for valid in-bounds values with LIGHTNESS mode (r=%d, g=%d, b=%d), but returned non-zero", r, g, b);
+  }
 }
 
 /**
@@ -154,7 +217,9 @@ static void testToGrayScale001(void **state) {
   //steel blue:
   int r = 70, g = 130, b = 180;
   toGrayScale(&r,&g,&b,AVERAGE);
-  assert_true(r == 127 && g == 127 && b == 127);
+  if (!(r == 127 && g == 127 && b == 127)) {
+    fail_msg("toGrayScale(70, 130, 180, AVERAGE) expected (127, 127, 127) but got (%d, %d, %d)", r, g, b);
+  }
 }
 
 /**
@@ -171,10 +236,15 @@ static void testToGrayScaleValues(void **state) {
   int r = values[0], g = values[1], b = values[2];
 
   toGrayScale(&r, &g, &b, values[3]);
-  assert_true(
+  if (!(
               r == values[4] &&
               g == values[5] &&
-              b == values[6]);
+              b == values[6])) {
+    fail_msg("toGrayScale(%d, %d, %d, mode=%d) expected (%d, %d, %d) but got (%d, %d, %d)",
+             values[0], values[1], values[2], values[3],
+             values[4], values[5], values[6],
+             r, g, b);
+  }
 
 }
 
